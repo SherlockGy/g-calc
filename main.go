@@ -12,9 +12,9 @@ import (
 
 func main() {
 	color.Cyan("欢迎使用 g-calc 计算器！")
-	color.Cyan("请输入表达式（支持加、减、乘、除和括号）。")
-	color.Cyan("使用左右箭头键移动光标。")
-	color.Cyan("输入'q'退出。")
+	color.Cyan("- 支持 +、-、*、/ 和括号。")
+	color.Cyan("- 使用上下键查看历史记录。")
+	color.Cyan("- 输入 'q' 退出。")
 	fmt.Println()
 
 	greenFunc := color.New(color.FgGreen).SprintfFunc()
