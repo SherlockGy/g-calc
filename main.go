@@ -14,7 +14,8 @@ func main() {
 	color.Cyan("欢迎使用 g-calc 计算器！")
 	color.Cyan("请输入表达式（支持加、减、乘、除和括号）。")
 	color.Cyan("使用左右箭头键移动光标。")
-	color.Cyan("输入'q'退出。\n")
+	color.Cyan("输入'q'退出。")
+	fmt.Println()
 
 	greenFunc := color.New(color.FgGreen).SprintfFunc()
 
@@ -42,7 +43,7 @@ func main() {
 		if input != "" {
 			history.Value = input
 			history = history.Next()
-			rl.SaveHistory(input)
+			_ = rl.SaveHistory(input)
 		}
 		result, err := evaluate(input)
 		if err != nil {
@@ -52,6 +53,7 @@ func main() {
 		}
 	}
 	color.Cyan("谢谢使用，再见！")
+	fmt.Println()
 }
 
 func evaluate(expr string) (*big.Float, error) {
