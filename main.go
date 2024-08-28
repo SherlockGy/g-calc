@@ -1,28 +1,33 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"math/big"
-	"os"
 	"strings"
 
+	"github.com/chzyer/readline"
 	"github.com/fatih/color"
 )
 
 func main() {
-	color.Cyan("欢迎使用Go命令行计算器！")
-	color.Cyan("请输入表达式（支持加、减、乘、除和括号），输入'quit'退出。")
-	greenFunc := color.New(color.FgGreen).SprintfFunc()
+	color.Cyan("欢迎使用 g-calc 命令行计算器！")
+	color.Cyan("请输入表达式（支持加、减、乘、除和括号），输入'q'退出。")
+	color.Cyan("使用左右箭头键移动光标。")
 
-	scanner := bufio.NewScanner(os.Stdin)
+	rl, err := readline.New("> ")
+	if err != nil {
+		color.Red("Error: %v", err)
+		return
+	}
+	defer rl.Close()
+
 	for {
-		fmt.Printf("%s", greenFunc(">>> "))
-		if !scanner.Scan() {
+		input, err := rl.Readline()
+		if err != nil {
 			break
 		}
-		input := scanner.Text()
-		if input == "quit" {
+		input = strings.TrimSpace(input)
+		if input == "q" {
 			break
 		}
 		result, err := evaluate(input)
