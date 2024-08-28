@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/ring"
 	"fmt"
 	"math/big"
 	"strings"
@@ -10,11 +11,19 @@ import (
 )
 
 func main() {
-	color.Cyan("欢迎使用 g-calc 命令行计算器！")
-	color.Cyan("请输入表达式（支持加、减、乘、除和括号），输入'q'退出。")
+	color.Cyan("欢迎使用 g-calc 计算器！")
+	color.Cyan("请输入表达式（支持加、减、乘、除和括号）。")
 	color.Cyan("使用左右箭头键移动光标。")
+	color.Cyan("输入'q'退出。\n")
 
-	rl, err := readline.New("> ")
+	greenFunc := color.New(color.FgGreen).SprintfFunc()
+
+	history := ring.New(10)
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt:            greenFunc("> "),
+		HistoryLimit:      10,
+		HistorySearchFold: true,
+	})
 	if err != nil {
 		color.Red("Error: %v", err)
 		return
@@ -30,6 +39,11 @@ func main() {
 		if input == "q" {
 			break
 		}
+		if input != "" {
+			history.Value = input
+			history = history.Next()
+			rl.SaveHistory(input)
+		}
 		result, err := evaluate(input)
 		if err != nil {
 			color.Red("错误: %v", err)
@@ -44,7 +58,6 @@ func evaluate(expr string) (*big.Float, error) {
 	// 替换中文括号为英文括号
 	expr = strings.ReplaceAll(expr, "（", "(")
 	expr = strings.ReplaceAll(expr, "）", ")")
-
 	tokens, err := tokenize(expr)
 	if err != nil {
 		return nil, err
